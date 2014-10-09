@@ -20,6 +20,7 @@
   ],
   "dependencies": {
     "c3": "~0.3.0",
-    "underscore": "~1.7.0"
+    "underscore": "~1.7.0",
+    "angular": "~1.2.26"
   }
 }

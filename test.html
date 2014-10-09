@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<link href="bower_components/c3/c3.css" rel="stylesheet" type="text/css">
+	<script src="bower_components/underscore/underscore-min.js"></script>
+
+	<!-- Load d3.js and c3.js -->
+	<script src="bower_components/d3/d3.min.js" charset="utf-8"></script>
+	<script src="bower_components/c3/c3.min.js"></script>
+	<script src="bower_components/angular/angular.min.js"></script>
+	<script src="c3-angular.js"></script>
+	<script src='main.js'></script>
+	<title>C3 Angularjs directives</title>
+</head>
+
+<body ng-app='test' ng-controller='Ctrl'>
+	<c3-chart data="{{data}}" type="{{type}}" chartid="chart3"></c3-chart>
+	
+</body>
+
+</html>
