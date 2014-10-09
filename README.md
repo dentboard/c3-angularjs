@@ -18,7 +18,7 @@ Load the scripts and css in the following order:
 And you can start using the charts using:
 
 ```
- <c3-chart data="{{data}}"></c3-chart>
+    <c3-chart data="{{data}}"></c3-chart>
 ```
 
 Optional attributes include chartid (if undefined, a randome id is defined), grid, padding, size, color and axis. Refer to c3 Documentation for the format of these objects. 
