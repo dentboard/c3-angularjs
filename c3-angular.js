@@ -25,43 +25,56 @@ var counter = Math.ceil((Math.random() * 1000));
 	            	scope_dir = scope;
 
 	            	//set the id if given or add a random one
-	            	if (scope.chartid){
-	            		elem[0].childNodes[0].id = scope.chartid;
+	            	var generateChartId = function() {
+						if (!scope.chartid) {
+	            			if (scope.chartid){
+			            		elem[0].childNodes[0].id = scope.chartid;
+			            	}
+			            	else{
+			            		
+			            		elem[0].childNodes[0].id = scope.chartid = 'c3'+counter;
+			            		console.log('in here', scope.chartid)
+			            		counter++;
+			            	}
+	            		}	            		
 	            	}
-	            	else{
-	            		elem[0].childNodes[0].id = scope.chartid = 'c3'+counter;
-	            		counter++;
+
+	            	scope.generateChart = function() {
+	            		console.log('scope.chartid', scope.chartid)
+	            		axis = scope.axis || {}
+		            	color = scope.color || {}
+		            	size = scope.size || {}
+		            	padding = scope.padding || {}
+		            	grid = scope.grid || {}
+	            		//generate the chart
+		            	var chart = c3.generate({
+		            	    bindto: '#'+scope.chartid,
+		            	    data: scope.data,
+		            	    axis: axis,
+		            	    color: color,
+		            	    size: size,   
+		            	    padding: padding,
+		            	    grid: grid         	    
+		            	});
+
+		            	chart1 = chart;
 	            	}
-
-	            	axis = scope.axis || {}
-	            	color = scope.color || {}
-	            	size = scope.size || {}
-	            	padding = scope.padding || {}
-	            	grid = scope.grid || {}
-
-	            	//generate the chart
-	            	var chart = c3.generate({
-	            	    bindto: '#'+scope.chartid,
-	            	    data: scope.data,
-	            	    axis: axis,
-	            	    color: color,
-	            	    size: size,   
-	            	    padding: padding,
-	            	    grid: grid         	    
-	            	});
-
-	            	chart1 = chart;
+	            	
 	            	//console.log('chart', chart);
 
 	            	//update 
 	            	scope.$watch('data', function(newVal, oldVal) {
-	            		if(newVal != oldVal){
-		            		//console.log('in data watch', typeof(newVal), oldVal);
-		            		chart.unload();
-		            		chart.load(
-		            			JSON.parse(newVal)
-		            		);
-		            	}
+	            		generateChartId();
+	            		if (newVal == oldVal) {
+	            			console.log('chartid', scope.chartid) 
+	            			scope.generateChart();
+	            		}
+	            		else if (newVal != oldVal) {
+	            			console.log('chartid', scope.chartid) 
+	            			chart.unload();
+	            			chart.load(newVal);
+	            		}
+		            	
 	            	});
 
 	            },
@@ -73,11 +86,15 @@ var counter = Math.ceil((Math.random() * 1000));
 			scope: {
 				data: "=",
 			},
-			template: "<c3-chart data='data'></c3-chart>",
+			template: "<c3-chart data='dataObj'></c3-chart>",
 			link: function(scope, elem, attrs) {
-				scope.dataObj = {};
+				scope_bar = scope;
+				scope.dataObj = {columns: []};
 				scope.$watch('data', function(newVal) {
 					console.log('data', newVal);
+					scope.dataObj.columns =  _.values(scope.data);
+					scope.dataObj.labels = Object.keys(scope.data);
+					scope.dataObj.type = 'bar';
 				})
 			}
 		}
