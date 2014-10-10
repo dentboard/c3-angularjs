@@ -39,7 +39,7 @@ var counter = Math.ceil((Math.random() * 1000));
 	            	};
 
 	            	scope.generateChart = function() {
-	            		console.log('scope.chartid', scope.chartid)
+	            		console.log('in geenrate', scope.data)
 	            		axis = scope.axis || {}
 		            	color = scope.color || {}
 		            	size = scope.size || {}
@@ -64,12 +64,12 @@ var counter = Math.ceil((Math.random() * 1000));
 	            	//update 
 	            	scope.$watch('data', function(newVal, oldVal) {
 	            		generateChartId();
-	            		if (newVal == oldVal) {
-	            			console.log('chartid', scope.chartid) 
+	            		if (newVal) {
+	            			console.log('generate', newVal, oldVal) 
 	            			scope.generateChart();
 	            		}
 	            		else if (newVal != oldVal) {
-	            			console.log('chartid', scope.chartid) 
+	            			console.log('load data', scope.chartid) 
 	            			chart.unload();
 	            			chart.load(newVal);
 	            		}
@@ -87,13 +87,16 @@ var counter = Math.ceil((Math.random() * 1000));
 	            },
 	            template: "<c3-chart data='dataObj'></c3-chart>",
 	            link: function(scope, elem, attrs, controller) {
-					console.log("donut", scope.data)
-					var values = _.values(scope.data);
-					var labels = Object.key(scope.data);
+					//console.log("donut", scope.data)
+					scope.dataObj = {};
 					scope_donut = scope;
-					var dataObj = {};
-					dataObj['rows'] = [labels, values];
-					dataObj['type'] = 'donut';
+					scope.$watch('data', function(newVal) {
+						console.log('data in donut', newVal);
+						var values = _.values(scope.data);
+						var labels = Object.keys(scope.data);
+						scope.dataObj['rows'] = [labels, values];
+						scope.dataObj['type'] = 'donut';
+					})
 				},
 	        }
 	    })

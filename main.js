@@ -12,13 +12,6 @@ function MainCtrl ($scope) {
         data2: 'bar'
       }
     };
-
-    $scope.test = {
-      pbad: 1,
-      neil: 2,
-      sanke: 3
-    }
-
     $scope.axis = {
       y: {
         label: {
@@ -44,16 +37,11 @@ function MainCtrl ($scope) {
 
     $scope.size =  { width: 500 }
 
-    $scope.donutD =  {
-                            columns: [
-                                ['data1', 30],
-                                ['data2', 120],
-                            ],
-                            type : 'donut',
-                            onclick: function (d, i) { console.log("onclick", d, i); },
-                            onmouseover: function (d, i) { console.log("onmouseover", d, i); },
-                            onmouseout: function (d, i) { console.log("onmouseout", d, i); }
-                        };
+    $scope.donutD = {
+        'food': 400,
+        'clothes:': 200,
+        'utilities': 1000,
+    }
 }
 
 
