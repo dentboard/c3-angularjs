@@ -14,9 +14,9 @@ function MainCtrl ($scope) {
     };
 
     $scope.test = {
-      50: 1,
-      100: 2,
-      150: 3
+      pbad: 1,
+      neil: 2,
+      sanke: 3
     }
 
     $scope.axis = {
@@ -49,6 +49,10 @@ function MainCtrl ($scope) {
         'clothes:': 200,
         'utilities': 1000,
     }
+
+    $scope.line = [30, 200, 100, 400, 150, 250];
+    $scope.times = ['2013-01-01', '2013-01-02', '2013-01-03', '2013-01-04', '2013-01-05', '2013-01-06'];
+    $scope.hi = "label1";
 }
 
 

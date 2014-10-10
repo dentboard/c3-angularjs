@@ -19,9 +19,7 @@ var counter = Math.ceil((Math.random() * 1000));
 	            },
 	            template: "<div></div>",
 	            link: function(scope, elem, attrs) {
-	            	console.log(scope.data)
-	            	elem_dir= elem;
-	            	attr_dir=attrs;
+	            	//console.log(scope.data)
 	            	scope_dir = scope;
 
 	            	//set the id if given or add a random one
@@ -31,14 +29,12 @@ var counter = Math.ceil((Math.random() * 1000));
 			            }
 		            	else {			   
 		            		elem[0].childNodes[0].id = scope.chartid = 'c3'+counter;
-		            		console.log('in here', scope.chartid)
 		            		counter++;
 		            	}
 	            			            		
 	            	};
 
 	            	scope.generateChart = function() {
-	            		console.log('in geenrate', scope.data)
 	            		axis = scope.axis || {}
 		            	color = scope.color || {}
 		            	size = scope.size || {}
@@ -63,12 +59,12 @@ var counter = Math.ceil((Math.random() * 1000));
 	            	//update 
 	            	scope.$watch('data', function(newVal, oldVal) {
 	            		generateChartId();
-	            		if (newVal && newVal == oldVal) {
-	            			console.log('chartid', scope.chartid) 
+		            		if (newVal && newVal == oldVal) {
+	            			//console.log('chartid', scope.chartid) 
 	            			scope.generateChart();
 	            		}
 	            		else if (newVal != oldVal) {
-	            			console.log('load data', scope.chartid) 
+	            			//console.log('load data', scope.chartid) 
 	            			chart.unload();
 	            			chart.load(newVal);
 	            		}
@@ -88,9 +84,7 @@ var counter = Math.ceil((Math.random() * 1000));
 	            template: "<c3-chart data='dataObj'></c3-chart>",
 	            link: function(scope, elem, attrs, controller) {
 					scope.dataObj = {};
-					scope_donut = scope;
 					scope.$watch('data', function(newVal) {
-						console.log('data in donut', newVal);
 						var values = _.values(scope.data);
 						var labels = Object.keys(scope.data);
 						scope.dataObj['rows'] = [labels, values];
@@ -112,16 +106,49 @@ var counter = Math.ceil((Math.random() * 1000));
 				},
 				template: "<c3-chart data='dataObj'></c3-chart>",
 				link: function(scope, elem, attrs) {
-					scope_bar = scope;
-					scope.dataObj = {columns: []};
+					//scope_bar = scope;
+					scope.dataObj = {};
 					scope.$watch('data', function(newVal) {
-						console.log('data', newVal);
-						scope.dataObj.x = 'x'
-						scope.dataObj.columns[0] = ['x'].concat(Object.keys(newVal));
-						scope.dataObj.columns[1] = ['data1'].concat((_.values(newVal)));
-						scope.dataObj.type = 'bar';
+						//console.log('data', newVal);
+						var labels = Object.keys(newVal);
+						var values = _.values(newVal);
+						scope.dataObj['rows'] = [labels, values];
+						scope.dataObj['type'] = 'bar';
 					})
 				}
 		    };
 		})
+		.directive('c3Line', function() {
+	        return {
+	            restrict: "AE",
+	            scope:{
+	            	data: "=",
+	            	timeSeries: "=",
+	            	label: "="
+	            },
+	            template: "<c3-chart data='dataObj' axis='axisObj'></c3-chart>",
+	            link: function(scope, elem, attrs, controller) {
+					scope.dataObj = {};
+					attrs_line = attrs;
+					scope.axisObj = {};
+					scope.$watch('data', function(newVal) {
+						scope.data.unshift(scope.label)
+						if('timeSeries' in attrs){
+							scope.dataObj['x'] = 'x';
+							scope.timeSeries.unshift('x');
+							scope.dataObj['columns'] = [scope.timeSeries, scope.data];
+							scope.axisObj['x'] = {}
+							scope.axisObj['x']['type'] = 'timeseries';
+							scope.axisObj['x']['tick'] = {}
+							scope.axisObj['x']['tick']['format'] = '%Y-%m-%d';
+							console.log("in line", scope.dataObj, scope.axisObj);
+						}
+						else{
+							scope.dataObj['columns'] = [scope.data]
+						}
+					})
+				},
+	        }
+	    })
 })();
+
