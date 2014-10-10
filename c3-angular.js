@@ -66,5 +66,20 @@ var counter = Math.ceil((Math.random() * 1000));
 
 	            },
 	    };
+	})
+	.directive('c3BarChart', function() {
+		return {
+			restrict: "AE",
+			scope: {
+				data: "=",
+			},
+			template: "<c3-chart data='data'></c3-chart>",
+			link: function(scope, elem, attrs) {
+				scope.dataObj = {};
+				scope.$watch('data', function(newVal) {
+					console.log('data', newVal);
+				})
+			}
+		}
 	});
 }());
