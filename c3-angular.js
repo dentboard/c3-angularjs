@@ -9,13 +9,13 @@ var counter = Math.ceil((Math.random() * 1000));
 	        return {
 	            restrict: "AE",
 	            scope:{
-	            	data: "@",
-	            	axis: "@", 
+	            	data: "=",
+	            	axis: "=", 
 	            	chartid: "@",
-	            	color: "@", 
-	            	size: "@",
-	            	padding: "@",
-	            	grid: "@",
+	            	color: "=", 
+	            	size: "=",
+	            	padding: "=",
+	            	grid: "=",
 	            },
 	            template: "<div></div>",
 	            link: function(scope, elem, attrs) {
@@ -33,21 +33,21 @@ var counter = Math.ceil((Math.random() * 1000));
 	            		counter++;
 	            	}
 
-	            	axis = scope.axis || "{}"
-	            	color = scope.color || "{}"
-	            	size = scope.size || "{}"
-	            	padding = scope.padding || "{}"
-	            	grid = scope.grid || "{}"
+	            	axis = scope.axis || {}
+	            	color = scope.color || {}
+	            	size = scope.size || {}
+	            	padding = scope.padding || {}
+	            	grid = scope.grid || {}
 
 	            	//generate the chart
 	            	var chart = c3.generate({
 	            	    bindto: '#'+scope.chartid,
-	            	    data: JSON.parse(scope.data),
-	            	    axis: JSON.parse(axis),
-	            	    color: JSON.parse(color),
-	            	    size: JSON.parse(size),   
-	            	    padding: JSON.parse(padding),
-	            	    grid: JSON.parse(grid)         	    
+	            	    data: scope.data,
+	            	    axis: axis,
+	            	    color: color,
+	            	    size: size,   
+	            	    padding: padding,
+	            	    grid: grid         	    
 	            	});
 
 	            	chart1 = chart;
@@ -65,6 +65,18 @@ var counter = Math.ceil((Math.random() * 1000));
 	            	});
 
 	            },
-	    };
-	});
+	    	};
+		})
+		.directive('c3Donut', function() {
+	        return {
+	            restrict: "AE",
+	            scope:{
+	            	data: "=",
+	            	axis: "=", 
+	            	chartid: "@",
+	            },
+	            template: "<c3-chart data='data' axis='axis' ></c3-chart>",
+	        }
+	    });
 }());
+
