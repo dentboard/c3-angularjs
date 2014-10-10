@@ -18,8 +18,9 @@ var counter = Math.ceil((Math.random() * 1000));
 	            	grid: "=",
 	            },
 	            template: "<div></div>",
-	            link: function(scope, elem, attrs) {
 
+	            link: function(scope, elem, attrs) {
+	            	console.log(scope.data)
 	            	elem_dir= elem;
 	            	attr_dir=attrs;
 	            	scope_dir = scope;
@@ -72,11 +73,42 @@ var counter = Math.ceil((Math.random() * 1000));
 	            restrict: "AE",
 	            scope:{
 	            	data: "=",
-	            	axis: "=", 
+	            	//axis: "=", 
 	            	chartid: "@",
 	            },
-	            template: "<c3-chart data='data' axis='axis' ></c3-chart>",
+	            template: "<c3-chart></c3-chart>",
+	            // compile: function compile(tElement, tAttrs, transclude) {
+	            //       return {
+	            //         pre: function preLink(scope, iElement, iAttrs, controller) { 
+	            //         	dataObj = scope.data;
+	            //         },
+	            //       }
+	            // },
+	            link: function(scope, elem, attrs, controller) {
+					console.log("donut", scope.data)
+					// var labels = _.map(scope.data, function(value, key){return key});
+					// var values = _.map(scope.data, function(value, key){return value});
+					scope_donut = scope;
+					elem_d = elem;
+					var dataObj = {};
+					//dataObj['rows'] = [labels, values];
+					dataObj['type'] = 'donut';
+					/**
+						data: {
+						    columns: [
+						        ['data1', 30],
+						        ['data2', 120],
+						    ],
+						    type : 'donut',
+						    onclick: function (d, i) { console.log("onclick", d, i); },
+						    onmouseover: function (d, i) { console.log("onmouseover", d, i); },
+						    onmouseout: function (d, i) { console.log("onmouseout", d, i); }
+						},
+						donut: {
+						    title: "Iris Petal Width"
+						}
+					**/
+				}
 	        }
 	    });
 }());
-
