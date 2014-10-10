@@ -19,7 +19,6 @@ var counter = Math.ceil((Math.random() * 1000));
 	            },
 	            template: "<div></div>",
 	            link: function(scope, elem, attrs) {
-	            	//console.log(scope.data)
 	            	scope_dir = scope;
 
 	            	//set the id if given or add a random one
@@ -30,17 +29,16 @@ var counter = Math.ceil((Math.random() * 1000));
 		            	else {			   
 		            		elem[0].childNodes[0].id = scope.chartid = 'c3'+counter;
 		            		counter++;
-		            	}
-	            			            		
+		            	}            		
 	            	};
 
+	            	//generate the chart
 	            	scope.generateChart = function() {
 	            		axis = scope.axis || {}
 		            	color = scope.color || {}
 		            	size = scope.size || {}
 		            	padding = scope.padding || {}
 		            	grid = scope.grid || {}
-	            		//generate the chart
 		            	var chart = c3.generate({
 		            	    bindto: '#'+scope.chartid,
 		            	    data: scope.data,
@@ -50,25 +48,18 @@ var counter = Math.ceil((Math.random() * 1000));
 		            	    padding: padding,
 		            	    grid: grid         	    
 		            	});
-
-		            	chart1 = chart;
 	            	};
-	            	
-	            	//console.log('chart', chart);
 
 	            	//update 
 	            	scope.$watch('data', function(newVal, oldVal) {
 	            		generateChartId();
 		            		if (newVal && newVal == oldVal) {
-	            			//console.log('chartid', scope.chartid) 
 	            			scope.generateChart();
 	            		}
 	            		else if (newVal != oldVal) {
-	            			//console.log('load data', scope.chartid) 
 	            			chart.unload();
 	            			chart.load(newVal);
 	            		}
-		            	
 	            	});
 
 	            },
