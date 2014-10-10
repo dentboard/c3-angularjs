@@ -83,11 +83,10 @@ var counter = Math.ceil((Math.random() * 1000));
 	            restrict: "AE",
 	            scope:{
 	            	data: "=",
+	            	pie: "@"
 	            },
 	            template: "<c3-chart data='dataObj'></c3-chart>",
 	            link: function(scope, elem, attrs, controller) {
-
-					//console.log("donut", scope.data)
 					scope.dataObj = {};
 					scope_donut = scope;
 					scope.$watch('data', function(newVal) {
@@ -95,29 +94,34 @@ var counter = Math.ceil((Math.random() * 1000));
 						var values = _.values(scope.data);
 						var labels = Object.keys(scope.data);
 						scope.dataObj['rows'] = [labels, values];
-						scope.dataObj['type'] = 'donut';
+						if('pie' in attrs){
+							scope.dataObj['type'] = 'pie';
+						}
+						else{
+							scope.dataObj['type'] = 'donut';
+						}
 					})
 				},
 	        }
 	    })
 		.directive('c3Bar', function() {
-		return {
-			restrict: "AE",
-			scope: {
-				data: "=",
-			},
-			template: "<c3-chart data='dataObj'></c3-chart>",
-			link: function(scope, elem, attrs) {
-				scope_bar = scope;
-				scope.dataObj = {columns: []};
-				scope.$watch('data', function(newVal) {
-					console.log('data', newVal);
-					scope.dataObj.x = 'x'
-					scope.dataObj.columns[0] = ['x'].concat(Object.keys(newVal));
-					scope.dataObj.columns[1] = ['data1'].concat((_.values(newVal)));
-					scope.dataObj.type = 'bar';
-				})
-			}
-	    };
-	})
+			return {
+				restrict: "AE",
+				scope: {
+					data: "=",
+				},
+				template: "<c3-chart data='dataObj'></c3-chart>",
+				link: function(scope, elem, attrs) {
+					scope_bar = scope;
+					scope.dataObj = {columns: []};
+					scope.$watch('data', function(newVal) {
+						console.log('data', newVal);
+						scope.dataObj.x = 'x'
+						scope.dataObj.columns[0] = ['x'].concat(Object.keys(newVal));
+						scope.dataObj.columns[1] = ['data1'].concat((_.values(newVal)));
+						scope.dataObj.type = 'bar';
+					})
+				}
+		    };
+		})
 })();
