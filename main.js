@@ -14,9 +14,9 @@ function MainCtrl ($scope) {
     };
 
     $scope.test = {
-      50: 1,
-      100: 2,
-      150: 3
+      pbad: 1,
+      neil: 2,
+      sanke: 3
     }
 
     $scope.axis = {

@@ -63,7 +63,7 @@ var counter = Math.ceil((Math.random() * 1000));
 	            	//update 
 	            	scope.$watch('data', function(newVal, oldVal) {
 	            		generateChartId();
-	            		if (newVal && newVal == oldVal) {
+		            		if (newVal && newVal == oldVal) {
 	            			console.log('chartid', scope.chartid) 
 	            			scope.generateChart();
 	            		}
@@ -112,10 +112,10 @@ var counter = Math.ceil((Math.random() * 1000));
 				scope.dataObj = {columns: []};
 				scope.$watch('data', function(newVal) {
 					console.log('data', newVal);
-					scope.dataObj.x = 'x'
-					scope.dataObj.columns[0] = ['x'].concat(Object.keys(newVal));
-					scope.dataObj.columns[1] = ['data1'].concat((_.values(newVal)));
-					scope.dataObj.type = 'bar';
+					var labels = Object.keys(newVal);
+					var values = _.values(newVal);
+					scope.dataObj['rows'] = [labels, values];
+					scope.dataObj['type'] = 'bar';
 				})
 			}
 	    };
