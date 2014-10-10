@@ -18,7 +18,6 @@ var counter = Math.ceil((Math.random() * 1000));
 	            	grid: "=",
 	            },
 	            template: "<div></div>",
-
 	            link: function(scope, elem, attrs) {
 	            	console.log(scope.data)
 	            	elem_dir= elem;
@@ -26,89 +25,95 @@ var counter = Math.ceil((Math.random() * 1000));
 	            	scope_dir = scope;
 
 	            	//set the id if given or add a random one
-	            	if (scope.chartid){
-	            		elem[0].childNodes[0].id = scope.chartid;
-	            	}
-	            	else{
-	            		elem[0].childNodes[0].id = scope.chartid = 'c3'+counter;
-	            		counter++;
-	            	}
+	            	var generateChartId = function() {
+						if (!scope.chartid) {
+	            			if (scope.chartid){
+			            		elem[0].childNodes[0].id = scope.chartid;
+			            	}
+			            	else{			   
+			            		elem[0].childNodes[0].id = scope.chartid = 'c3'+counter;
+			            		console.log('in here', scope.chartid)
+			            		counter++;
+			            	}
+	            		}	            		
+	            	};
 
-	            	axis = scope.axis || {}
-	            	color = scope.color || {}
-	            	size = scope.size || {}
-	            	padding = scope.padding || {}
-	            	grid = scope.grid || {}
+	            	scope.generateChart = function() {
+	            		console.log('scope.chartid', scope.chartid)
+	            		axis = scope.axis || {}
+		            	color = scope.color || {}
+		            	size = scope.size || {}
+		            	padding = scope.padding || {}
+		            	grid = scope.grid || {}
+	            		//generate the chart
+		            	var chart = c3.generate({
+		            	    bindto: '#'+scope.chartid,
+		            	    data: scope.data,
+		            	    axis: axis,
+		            	    color: color,
+		            	    size: size,   
+		            	    padding: padding,
+		            	    grid: grid         	    
+		            	});
 
-	            	//generate the chart
-	            	var chart = c3.generate({
-	            	    bindto: '#'+scope.chartid,
-	            	    data: scope.data,
-	            	    axis: axis,
-	            	    color: color,
-	            	    size: size,   
-	            	    padding: padding,
-	            	    grid: grid         	    
-	            	});
-
-	            	chart1 = chart;
+		            	chart1 = chart;
+	            	};
+	            	
 	            	//console.log('chart', chart);
 
 	            	//update 
 	            	scope.$watch('data', function(newVal, oldVal) {
-	            		if(newVal != oldVal){
-		            		//console.log('in data watch', typeof(newVal), oldVal);
-		            		chart.unload();
-		            		chart.load(
-		            			JSON.parse(newVal)
-		            		);
-		            	}
+	            		generateChartId();
+	            		if (newVal == oldVal) {
+	            			console.log('chartid', scope.chartid) 
+	            			scope.generateChart();
+	            		}
+	            		else if (newVal != oldVal) {
+	            			console.log('chartid', scope.chartid) 
+	            			chart.unload();
+	            			chart.load(newVal);
+	            		}
+		            	
 	            	});
 
 	            },
-	    	};
+	        }
 		})
 		.directive('c3Donut', function() {
 	        return {
 	            restrict: "AE",
 	            scope:{
 	            	data: "=",
-	            	//axis: "=", 
-	            	chartid: "@",
 	            },
-	            template: "<c3-chart></c3-chart>",
-	            // compile: function compile(tElement, tAttrs, transclude) {
-	            //       return {
-	            //         pre: function preLink(scope, iElement, iAttrs, controller) { 
-	            //         	dataObj = scope.data;
-	            //         },
-	            //       }
-	            // },
+	            template: "<c3-chart data='dataObj'></c3-chart>",
 	            link: function(scope, elem, attrs, controller) {
 					console.log("donut", scope.data)
-					// var labels = _.map(scope.data, function(value, key){return key});
-					// var values = _.map(scope.data, function(value, key){return value});
+					var values = _.values(scope.data);
+					var labels = Object.key(scope.data);
 					scope_donut = scope;
-					elem_d = elem;
 					var dataObj = {};
-					//dataObj['rows'] = [labels, values];
+					dataObj['rows'] = [labels, values];
 					dataObj['type'] = 'donut';
-					/**
-						data: {
-						    columns: [
-						        ['data1', 30],
-						        ['data2', 120],
-						    ],
-						    type : 'donut',
-						    onclick: function (d, i) { console.log("onclick", d, i); },
-						    onmouseover: function (d, i) { console.log("onmouseover", d, i); },
-						    onmouseout: function (d, i) { console.log("onmouseout", d, i); }
-						},
-						donut: {
-						    title: "Iris Petal Width"
-						}
-					**/
-				}
+				},
 	        }
-	    });
-}());
+	    })
+		.directive('c3Bar', function() {
+			return {
+				restrict: "AE",
+				scope: {
+					data: "=",
+				},
+				template: "<c3-chart data='dataObj'></c3-chart>",
+				link: function(scope, elem, attrs) {
+					scope_bar = scope;
+					scope.dataObj = {columns: []};
+					scope.$watch('data', function(newVal) {
+						console.log('data', newVal);
+						scope.dataObj.columns =  _.values(scope.data);
+						scope.dataObj.labels = Object.keys(scope.data);
+						scope.dataObj.type = 'bar';
+					})
+				}
+			}
+		});
+})();

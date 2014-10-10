@@ -12,6 +12,13 @@ function MainCtrl ($scope) {
         data2: 'bar'
       }
     };
+
+    $scope.test = {
+      pbad: 1,
+      neil: 2,
+      sanke: 3
+    }
+
     $scope.axis = {
       y: {
         label: {
