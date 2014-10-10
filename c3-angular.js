@@ -26,16 +26,15 @@ var counter = Math.ceil((Math.random() * 1000));
 
 	            	//set the id if given or add a random one
 	            	var generateChartId = function() {
-						if (!scope.chartid) {
-	            			if (scope.chartid){
-			            		elem[0].childNodes[0].id = scope.chartid;
-			            	}
-			            	else{			   
-			            		elem[0].childNodes[0].id = scope.chartid = 'c3'+counter;
-			            		console.log('in here', scope.chartid)
-			            		counter++;
-			            	}
-	            		}	            		
+						if (scope.chartid) {
+			           		elem[0].childNodes[0].id = scope.chartid;
+			            }
+		            	else {			   
+		            		elem[0].childNodes[0].id = scope.chartid = 'c3'+counter;
+		            		console.log('in here', scope.chartid)
+		            		counter++;
+		            	}
+	            			            		
 	            	};
 
 	            	scope.generateChart = function() {
@@ -64,7 +63,8 @@ var counter = Math.ceil((Math.random() * 1000));
 	            	//update 
 	            	scope.$watch('data', function(newVal, oldVal) {
 	            		generateChartId();
-	            		if (newVal == oldVal) {
+	            		console.log('newVal', newVal, 'oldVal', oldVal)
+	            		if (newVal && newVal == oldVal) {
 	            			console.log('chartid', scope.chartid) 
 	            			scope.generateChart();
 	            		}
@@ -89,31 +89,32 @@ var counter = Math.ceil((Math.random() * 1000));
 	            link: function(scope, elem, attrs, controller) {
 					console.log("donut", scope.data)
 					var values = _.values(scope.data);
-					var labels = Object.key(scope.data);
+					var labels = Object.keys(scope.data);
 					scope_donut = scope;
-					var dataObj = {};
-					dataObj['rows'] = [labels, values];
-					dataObj['type'] = 'donut';
+					scope.dataObj = {columns:[]};
+					scope.dataObj['rows'] = [labels, values];
+					scope.dataObj['type'] = 'donut';
 				},
 	        }
 	    })
 		.directive('c3Bar', function() {
-			return {
-				restrict: "AE",
-				scope: {
-					data: "=",
-				},
-				template: "<c3-chart data='dataObj'></c3-chart>",
-				link: function(scope, elem, attrs) {
-					scope_bar = scope;
-					scope.dataObj = {columns: []};
-					scope.$watch('data', function(newVal) {
-						console.log('data', newVal);
-						scope.dataObj.columns =  _.values(scope.data);
-						scope.dataObj.labels = Object.keys(scope.data);
-						scope.dataObj.type = 'bar';
-					})
-				}
+		return {
+			restrict: "AE",
+			scope: {
+				data: "=",
+			},
+			template: "<c3-chart data='dataObj'></c3-chart>",
+			link: function(scope, elem, attrs) {
+				scope_bar = scope;
+				scope.dataObj = {columns: []};
+				scope.$watch('data', function(newVal) {
+					console.log('data', newVal);
+					scope.dataObj.x = 'x'
+					scope.dataObj.columns[0] = ['x'].concat(Object.keys(newVal));
+					scope.dataObj.columns[1] = ['data1'].concat((_.values(newVal)));
+					scope.dataObj.type = 'bar';
+				})
 			}
-		});
+	    };
+	})
 })();
